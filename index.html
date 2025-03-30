@@ -1,38 +1,213 @@
 <!DOCTYPE html>
+<!--
+/**
+ * Shopping Cart Application - HTML Structure
+ *
+ * This is the main HTML file for a shopping cart application that fetches
+ * and displays products from the Fake Store API. It includes:
+ * - Bootstrap for responsive layout and styling
+ * - Font Awesome for icons
+ * - Custom CSS for additional styling
+ * - A two-column layout with products and cart summary
+ *
+ * @author Rotem Kashani
+ * @version 1.0
+ */
+-->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart</title>
+
+    <!-- External CSS libraries -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Custom CSS styles -->
     <style>
+        /**
+         * Main container spacing
+         */
         .container {
             margin-top: 20px;
         }
-        .product img {
-            width: 100px;
-            height: auto;
+
+        /**
+         * Product card styling with hover effects
+         * Cards have equal height and smooth transition for hover interaction
+         */
+        .product-card {
+            margin-bottom: 20px;
+            height: 100%;
+            transition: transform 0.3s;
         }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        /**
+         * Product image styling
+         * Fixed height with contain to preserve aspect ratio
+         */
+        .product-image {
+            height: 200px;
+            object-fit: contain;
+            padding: 10px;
+        }
+
+        /**
+         * Cart summary panel styling
+         * Uses sticky positioning to stay visible while scrolling
+         */
         .cart-summary {
             border: 1px solid #ddd;
-            padding: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            position: sticky;
+            top: 20px;
+        }
+
+        /**
+         * Quantity selector component styling
+         * Flexbox layout for alignment of buttons and quantity display
+         */
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        .quantity-selector button {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .quantity-selector span {
+            margin: 0 10px;
+            font-weight: bold;
+        }
+
+        /**
+         * Cart item styling
+         * Flexbox layout with space between details and quantity controls
+         */
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .cart-item-details {
+            flex-grow: 1;
+        }
+
+        /**
+         * Order summary section styling
+         */
+        .summary-section {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+
+        /**
+         * GitHub link styling (if used)
+         */
+        .github-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /**
+         * Featured badge for top-rated products
+         * Positioned absolutely within the product card
+         */
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ffc107;
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 0.8rem;
         }
     </style>
 </head>
 <body>
+<!-- Main container for the application -->
 <div class="container">
-    <h1 class="text-center">Shopping Cart</h1>
+    <h1 class="text-center mb-4">Shopping Cart</h1>
+
+    <!-- Main row containing the two-column layout -->
     <div class="row">
-        <div class="col-md-8">
-            <div id="products" class="row"></div>
+        <!--
+          * Left column - Cart Summary
+          * Order is reversed for mobile (appears below products)
+          * Uses col-md-4 for 1/3 width on medium screens and above
+        -->
+        <div class="col-md-4 order-md-1 mb-4">
+            <div class="cart-summary">
+                <h2>Order Summary</h2>
+                <!-- Container for dynamically generated cart items -->
+                <div id="cart-items">
+                    <!-- Cart items will be rendered here via JavaScript -->
+                </div>
+
+                <!-- Order totals section -->
+                <div class="summary-section">
+                    <!-- Products subtotal -->
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Products total:</span>
+                        <span id="products-total">$0.00</span>
+                    </div>
+
+                    <!-- Shipping cost (varies based on number of items) -->
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping:</span>
+                        <span id="shipping-cost">$5.00</span>
+                    </div>
+
+                    <!-- Order total (sum of products + shipping) -->
+                    <div class="d-flex justify-content-between fw-bold">
+                        <span>Total:</span>
+                        <span id="order-total">$0.00</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-md-4">
-            <h2>Cart Summary</h2>
-            <div id="cart-summary" class="cart-summary"></div>
+
+        <!--
+          * Right column - Products Display
+          * Order is reversed for mobile (appears above cart)
+          * Uses col-md-8 for 2/3 width on medium screens and above
+        -->
+        <div class="col-md-8 order-md-2">
+            <!-- Container for dynamically generated product cards -->
+            <div id="products-container" class="row">
+                <!--
+                  * Loading indicator (shown before products are loaded)
+                  * Will be replaced by product cards after API fetch completes
+                -->
+                <div class="col-12">
+                    <div class="text-center p-5">
+                        <div class="spinner-border" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading products...</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- Link to JavaScript file containing application logic -->
 <script src="Cart.js"></script>
 </body>
 </html>
