@@ -13,7 +13,7 @@
  * - Responsive design using Bootstrap
  * - Special shipping rules (increased shipping for orders with more than 4 items)
  *
- * @author Your Name
+ * @author Rotem Kashani
  * @version 1.0
  */
 
